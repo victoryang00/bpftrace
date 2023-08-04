@@ -5,7 +5,7 @@ set -e
 WARNINGS_AS_ERRORS=${WARNINGS_AS_ERRORS:-OFF}
 STATIC_LINKING=${STATIC_LINKING:-OFF}
 STATIC_LIBC=${STATIC_LIBC:-OFF}
-LLVM_VERSION=${LLVM_VERSION:-8} # default llvm to latest version
+LLVM_VERSION=${LLVM_VERSION:-14} # default llvm to latest version
 EMBED_USE_LLVM=${EMBED_USE_LLVM:-OFF}
 EMBED_BUILD_LLVM=${EMBED_BUILD_LLVM:-OFF}
 ALLOW_UNSAFE_PROBE=${ALLOW_UNSAFE_PROBE:-OFF}
@@ -24,9 +24,6 @@ if [[ $LLVM_VERSION -eq 13 ]]; then
   touch /usr/lib/llvm-13/bin/llvm-omp-device-info
 fi
 
-
-mkdir -p "$1"
-cd "$1"
 
 # Build vendored libraries first
 ../build-libs.sh

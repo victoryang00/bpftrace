@@ -927,6 +927,22 @@ void CodegenLLVM::visit(Call &call)
 
     expr_ = b_.CreateRegisterRead(ctx_, offset, call.func + "_" + reg_name);
   }
+  else if (call.func == "assume")
+  {
+    bpftrace::ast::Expression *arg = call.vargs->at(0);
+    auto scoped_del_arg = accept(arg);
+
+    Function *seahorn_assume_func = module_->getFunction("__SEA_assume");
+
+    expr_ = b_.CreateCall(seahorn_assume_func, { expr_ });
+    
+  }
+    else if (call.func == "error")
+  {
+      Function *seahorn_error_func = module_->getFunction("__VERIFIER_error");
+      expr_ = b_. CreateCall(seahorn_error_func,
+                    {} );
+  }
   else if (call.func == "printf")
   {
     // We overload printf call for iterator probe's seq_printf helper.
@@ -949,7 +965,7 @@ void CodegenLLVM::visit(Call &call)
         Expression &arg = *call.vargs->at(i);
         auto scoped_del = accept(&arg);
 
-        // and store it to data area
+        // and store  it to data area
         Value *offset = b_.CreateGEP(b_.GetType(data_type),
                                      data,
                                      { b_.getInt64(0),
@@ -1590,7 +1606,7 @@ void CodegenLLVM::binop_int(Binop &binop)
       LOG(BUG) << "\"" << opstr(binop) << "\" was handled earlier";
   }
   // Using signed extension will result in -1 which will likely confuse users
-  expr_ = b_.CreateIntCast(expr_, b_.getInt64Ty(), false);
+  // expr_ = b_.CreateIntCast(expr_, b_.getInt64Ty(), false);
 }
 
 void CodegenLLVM::binop_ptr(Binop &binop)

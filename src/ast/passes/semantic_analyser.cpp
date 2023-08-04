@@ -1385,6 +1385,12 @@ void SemanticAnalyser::visit(Call &call)
       }
     }
   }
+  else if (call.func == "assume")
+  {
+  }
+  else if (call.func == "error")
+  {
+  }
   else
   {
     LOG(ERROR, call.loc, err_) << "Unknown function: '" << call.func << "'";

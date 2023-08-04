@@ -140,6 +140,28 @@ IRBuilderBPF::IRBuilderBPF(LLVMContext &context,
       GlobalValue::ExternalLinkage,
       "llvm.bpf.pseudo",
       &module_);
+      // Declare seahorn function
+  FunctionType *seahorn_assume_type = FunctionType::get(
+    getVoidTy(),
+    {getInt1Ty()},
+    false
+  );
+  Function::Create(
+    seahorn_assume_type,
+    GlobalValue::ExternalLinkage,
+    "__SEA_assume",
+    &module_);
+
+  FunctionType *seahorn_error_type = FunctionType::get(
+    getVoidTy(),
+    { },
+    false
+  );
+  Function::Create(
+    seahorn_error_type,
+    GlobalValue::ExternalLinkage,
+    "__VERIFIER_error",
+    &module_);
 }
 
 void IRBuilderBPF::hoist(const std::function<void()> &functor)
