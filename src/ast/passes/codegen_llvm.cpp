@@ -68,7 +68,7 @@ CodegenLLVM::CodegenLLVM(Node *root, BPFtrace &bpftrace)
 #endif
                                       ));
   target_machine_->setOptLevel(llvm::CodeGenOpt::Aggressive);
-
+  context_->setOpaquePointers(false);
   module_->setTargetTriple(LLVMTargetTriple);
   module_->setDataLayout(target_machine_->createDataLayout());
 }
